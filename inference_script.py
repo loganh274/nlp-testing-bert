@@ -29,7 +29,9 @@ def predict_sentiment(model, sentences):
     for i, sentence in enumerate(sentences):
         results.append({
             "text": sentence,
-            "predicted_label": preds[i],
+            
+            "predicted_label": preds[i].item(), 
+            
             "confidence_scores": probas[i].tolist()
         })
         

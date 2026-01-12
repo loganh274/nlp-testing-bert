@@ -10,21 +10,20 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix
-from setfit import SetFitModel, Trainer, TrainingArguments # Changed SetFitTrainer to Trainer
+from setfit import SetFitModel, Trainer, TrainingArguments
 from datasets import Dataset
+from sentence_transformers.losses import CosineSimilarityLoss
 
 # ---------------------------------------------------------------------------
 # CONFIGURATION
 # ---------------------------------------------------------------------------
 DATA_PATH = "xpi_labeled_data_augmented.csv"
 MODEL_OUTPUT_DIR = "setfit_sentiment_model_safetensors"
-
-# "all-mpnet-base-v2" is widely considered the best general-purpose model 
 BASE_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2" 
 
 # Training Params
-NUM_EPOCHS = 3
 BATCH_SIZE = 16
+NUM_EPOCHS = 1  
 
 def plot_confusion_matrix(y_true, y_pred, labels, output_dir):
     cm = confusion_matrix(y_true, y_pred, labels=labels)
@@ -43,6 +42,7 @@ def save_deployment_metadata(output_dir, unique_labels):
     Saves environment details. Crucial for Snowflake deployment.
     """
     metadata = {
+        # FIX: Ensure labels are standard Python ints to avoid JSON errors
         "labels": [int(l) if isinstance(l, (np.integer, int)) else str(l) for l in unique_labels],
         "environment": {
             "python": sys.version,
@@ -57,8 +57,6 @@ def save_deployment_metadata(output_dir, unique_labels):
     with open(os.path.join(output_dir, "model_metadata.json"), "w") as f:
         json.dump(metadata, f, indent=4)
     print(f"Deployment metadata saved to {output_dir}/model_metadata.json")
-
-
 
 def main():
     print("--- Starting SetFit Sentiment Model Training (Safetensors) ---")
@@ -79,7 +77,8 @@ def main():
     
     df = df.dropna(subset=[text_col, label_col])
     
-    unique_labels = sorted(list(df[label_col].unique()))
+    # FIX: Convert numpy types to standard Python list to prevent crashes later
+    unique_labels = sorted(df[label_col].unique().tolist())
     print(f"Found {len(unique_labels)} unique classes: {unique_labels}")
 
     # Split Data
@@ -96,23 +95,27 @@ def main():
     )
     model.to(device)
 
-    # 4. TRAIN (UPDATED FOR SETFIT v1.0+)
+    # 4. TRAIN
     print("Starting training...")
     
-    # Define training arguments separately
     args = TrainingArguments(
         batch_size=BATCH_SIZE,
         num_epochs=NUM_EPOCHS,
-        evaluation_strategy="epoch", # Optional: evaluate at end of each epoch
+        eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
         num_iterations=20,
-        loss="CosineSimilarityLoss", # "loss_class" is now "loss" (can be string or class)
+        loss=CosineSimilarityLoss, # FIX: Passed as a class, not a string
+        
+        # OPTIMIZATION: Track evaluation loss to find the best model
+        metric_for_best_model="eval_embedding_loss", 
+        greater_is_better=False, 
+        save_total_limit=1,
     )
 
     trainer = Trainer(
         model=model,
-        args=args,                  # Pass arguments here
+        args=args,
         train_dataset=train_ds,
         eval_dataset=test_ds,
         metric="accuracy",
