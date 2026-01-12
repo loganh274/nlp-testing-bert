@@ -9,8 +9,8 @@ import setfit
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix, classification_report
-from setfit import SetFitModel, SetFitTrainer
+from sklearn.metrics import confusion_matrix
+from setfit import SetFitModel, Trainer, TrainingArguments # Changed SetFitTrainer to Trainer
 from datasets import Dataset
 
 # ---------------------------------------------------------------------------
@@ -43,7 +43,7 @@ def save_deployment_metadata(output_dir, unique_labels):
     Saves environment details. Crucial for Snowflake deployment.
     """
     metadata = {
-        "labels": unique_labels,
+        "labels": [int(l) if isinstance(l, (np.integer, int)) else str(l) for l in unique_labels],
         "environment": {
             "python": sys.version,
             "scikit-learn": sklearn.__version__,
@@ -57,6 +57,8 @@ def save_deployment_metadata(output_dir, unique_labels):
     with open(os.path.join(output_dir, "model_metadata.json"), "w") as f:
         json.dump(metadata, f, indent=4)
     print(f"Deployment metadata saved to {output_dir}/model_metadata.json")
+
+
 
 def main():
     print("--- Starting SetFit Sentiment Model Training (Safetensors) ---")
@@ -94,17 +96,26 @@ def main():
     )
     model.to(device)
 
-    # 4. TRAIN
+    # 4. TRAIN (UPDATED FOR SETFIT v1.0+)
     print("Starting training...")
-    trainer = SetFitTrainer(
+    
+    # Define training arguments separately
+    args = TrainingArguments(
+        batch_size=BATCH_SIZE,
+        num_epochs=NUM_EPOCHS,
+        evaluation_strategy="epoch", # Optional: evaluate at end of each epoch
+        save_strategy="epoch",
+        load_best_model_at_end=True,
+        num_iterations=20,
+        loss="CosineSimilarityLoss", # "loss_class" is now "loss" (can be string or class)
+    )
+
+    trainer = Trainer(
         model=model,
+        args=args,                  # Pass arguments here
         train_dataset=train_ds,
         eval_dataset=test_ds,
-        loss_class="CosineSimilarityLoss",
         metric="accuracy",
-        batch_size=BATCH_SIZE,
-        num_iterations=20, 
-        num_epochs=NUM_EPOCHS,
         column_mapping={text_col: "text", label_col: "label"}
     )
     
@@ -122,16 +133,10 @@ def main():
         
     plot_confusion_matrix(test_df[label_col], preds, unique_labels, MODEL_OUTPUT_DIR)
 
-    # 6. SAVE MODEL (SAFETENSORS)
+    # 6. SAVE MODEL
     print(f"Saving model to {MODEL_OUTPUT_DIR}...")
-    
-    # safe_serialization=True ensures the main transformer body is saved as .safetensors
-    # Note: A small 'model_head.pkl' may still be generated for the sklearn head, 
-    # but the massive weights file will be safe and version-independent.
     model.save_pretrained(MODEL_OUTPUT_DIR, safe_serialization=True)
-    
     save_deployment_metadata(MODEL_OUTPUT_DIR, unique_labels)
-    
     print("Done! Model saved in safetensors format.")
 
 if __name__ == "__main__":
