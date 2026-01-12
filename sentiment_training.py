@@ -1,3 +1,5 @@
+"""SetFit sentiment model training script."""
+
 import pandas as pd
 import numpy as np
 import torch
@@ -14,18 +16,16 @@ from setfit import SetFitModel, Trainer, TrainingArguments
 from datasets import Dataset
 from sentence_transformers.losses import CosineSimilarityLoss
 
-# ---------------------------------------------------------------------------
-# CONFIGURATION
-# ---------------------------------------------------------------------------
+# Configuration
 DATA_PATH = "xpi_labeled_data_augmented.csv"
 MODEL_OUTPUT_DIR = "setfit_sentiment_model_safetensors"
-BASE_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2" 
-
-# Training Params
+BASE_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"
 BATCH_SIZE = 16
-NUM_EPOCHS = 1  
+NUM_EPOCHS = 1
+
 
 def plot_confusion_matrix(y_true, y_pred, labels, output_dir):
+    """Generate and save confusion matrix visualization."""
     cm = confusion_matrix(y_true, y_pred, labels=labels)
     plt.figure(figsize=(10, 8))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=labels, yticklabels=labels)
@@ -37,12 +37,10 @@ def plot_confusion_matrix(y_true, y_pred, labels, output_dir):
     print(f"Confusion matrix saved to {output_dir}/confusion_matrix.png")
     plt.close()
 
+
 def save_deployment_metadata(output_dir, unique_labels):
-    """
-    Saves environment details. Crucial for Snowflake deployment.
-    """
+    """Save environment and model metadata for deployment reproducibility."""
     metadata = {
-        # FIX: Ensure labels are standard Python ints to avoid JSON errors
         "labels": [int(l) if isinstance(l, (np.integer, int)) else str(l) for l in unique_labels],
         "environment": {
             "python": sys.version,
@@ -58,14 +56,13 @@ def save_deployment_metadata(output_dir, unique_labels):
         json.dump(metadata, f, indent=4)
     print(f"Deployment metadata saved to {output_dir}/model_metadata.json")
 
+
 def main():
-    print("--- Starting SetFit Sentiment Model Training (Safetensors) ---")
+    print("--- Starting SetFit Sentiment Model Training ---")
 
-    # 1. HARDWARE CHECK
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(f"Hardware Check: Training on {device.upper()}")
+    print(f"Training on {device.upper()}")
 
-    # 2. LOAD DATA
     if not os.path.exists(DATA_PATH):
         raise FileNotFoundError(f"Data file not found at {DATA_PATH}")
 
@@ -76,28 +73,18 @@ def main():
     label_col = next((col for col in df.columns if 'label' in col.lower() or 'sentiment' in col.lower()), 'label')
     
     df = df.dropna(subset=[text_col, label_col])
-    
-    # FIX: Convert numpy types to standard Python list to prevent crashes later
     unique_labels = sorted(df[label_col].unique().tolist())
     print(f"Found {len(unique_labels)} unique classes: {unique_labels}")
 
-    # Split Data
     train_df, test_df = train_test_split(df, test_size=0.2, random_state=42, stratify=df[label_col])
-    
     train_ds = Dataset.from_pandas(train_df[[text_col, label_col]])
     test_ds = Dataset.from_pandas(test_df[[text_col, label_col]])
 
-    # 3. INITIALIZE SETFIT MODEL
     print(f"Loading base model: {BASE_MODEL_NAME}")
-    model = SetFitModel.from_pretrained(
-        BASE_MODEL_NAME,
-        labels=unique_labels,
-    )
+    model = SetFitModel.from_pretrained(BASE_MODEL_NAME, labels=unique_labels)
     model.to(device)
 
-    # 4. TRAIN
     print("Starting training...")
-    
     args = TrainingArguments(
         batch_size=BATCH_SIZE,
         num_epochs=NUM_EPOCHS,
@@ -105,11 +92,9 @@ def main():
         save_strategy="epoch",
         load_best_model_at_end=True,
         num_iterations=20,
-        loss=CosineSimilarityLoss, # FIX: Passed as a class, not a string
-        
-        # OPTIMIZATION: Track evaluation loss to find the best model
-        metric_for_best_model="eval_embedding_loss", 
-        greater_is_better=False, 
+        loss=CosineSimilarityLoss,
+        metric_for_best_model="eval_embedding_loss",
+        greater_is_better=False,
         save_total_limit=1,
     )
 
@@ -124,8 +109,7 @@ def main():
     
     trainer.train()
 
-    # 5. EVALUATION
-    print("Evaluating on Test Set...")
+    print("Evaluating on test set...")
     metrics = trainer.evaluate()
     print(f"Test Metrics: {metrics}")
     
@@ -136,11 +120,11 @@ def main():
         
     plot_confusion_matrix(test_df[label_col], preds, unique_labels, MODEL_OUTPUT_DIR)
 
-    # 6. SAVE MODEL
     print(f"Saving model to {MODEL_OUTPUT_DIR}...")
     model.save_pretrained(MODEL_OUTPUT_DIR, safe_serialization=True)
     save_deployment_metadata(MODEL_OUTPUT_DIR, unique_labels)
     print("Done! Model saved in safetensors format.")
+
 
 if __name__ == "__main__":
     main()
