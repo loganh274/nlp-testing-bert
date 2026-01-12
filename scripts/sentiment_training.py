@@ -17,8 +17,8 @@ from datasets import Dataset
 from sentence_transformers.losses import CosineSimilarityLoss
 
 # Configuration
-DATA_PATH = "xpi_labeled_data_augmented.csv"
-MODEL_OUTPUT_DIR = "setfit_sentiment_model_safetensors"
+DATA_PATH = "../data/xpi_labeled_data_augmented.csv"
+MODEL_OUTPUT_DIR = "../models/setfit_sentiment_model_safetensors"
 BASE_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"
 BATCH_SIZE = 16
 NUM_EPOCHS = 1

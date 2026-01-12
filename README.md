@@ -36,7 +36,7 @@ pip install -r requirements.txt
 ### Run Inference (Download from Hugging Face)
 
 ```bash
-python snowflake_inference.py
+python scripts/snowflake_inference.py
 ```
 
 This will automatically download the pretrained model from Hugging Face and run predictions on sample texts.
@@ -59,13 +59,25 @@ print(predictions)  # [2, 0] (example output)
 
 ## Project Structure
 
+```
+nlp-testing-bert/
+├── scripts/           # Python scripts for training, inference, and utilities
+├── data/              # Training data and input CSV files
+├── models/            # Trained model output (setfit_sentiment_model_safetensors/)
+├── output/            # Inference results and visualizations
+├── checkpoints/       # Training checkpoints
+└── requirements.txt   # Python dependencies
+```
+
+### Scripts
+
 | File | Description |
 |------|-------------|
-| `sentiment_training.py` | Training script for fine-tuning the model |
-| `inference_script.py` | CSV batch inference with configurable row limits |
-| `snowflake_inference.py` | Snowflake ML-ready inference script |
-| `push_to_hf.py` | Script to upload model to Hugging Face |
-| `generate_graphs.py` | Visualizations for model performance |
+| `scripts/sentiment_training.py` | Training script for fine-tuning the model |
+| `scripts/inference_script.py` | CSV batch inference with configurable row limits |
+| `scripts/snowflake_inference.py` | Snowflake ML-ready inference script |
+| `scripts/push_to_hf.py` | Script to upload model to Hugging Face |
+| `scripts/generate_graphs.py` | Visualizations for model performance |
 
 ---
 
@@ -75,12 +87,12 @@ Analyze sentiment on CSV files and output results with a new `SENTIMENT_SCORE` c
 
 ### Configuration
 
-Edit the settings at the bottom of `inference_script.py`:
+Edit the settings at the bottom of `scripts/inference_script.py`:
 
 ```python
 # ==================== CONFIGURATION ====================
-INPUT_CSV = "All XPI Comments filtered (2).csv"
-OUTPUT_FOLDER = "sentiment_output"
+INPUT_CSV = "../data/All XPI Comments filtered (2).csv"
+OUTPUT_FOLDER = "../output/sentiment_output"
 
 # Set MAX_ROWS to limit processing for testing (e.g., 1000, 5000)
 # Set to None to process ALL rows
@@ -93,19 +105,19 @@ BATCH_SIZE = 100  # Number of comments per batch
 ### Run Inference
 
 ```bash
-python inference_script.py
+python scripts/inference_script.py
 ```
 
 ### Output
 
-- Results are saved to `sentiment_output/` folder
+- Results are saved to `output/sentiment_output/` folder
 - Output filename includes row count when limited (e.g., `*_sentiment_1000rows.csv`)
 - The 5th column (`COMMENT_BODY`) is analyzed and `SENTIMENT_SCORE` is added as the 7th column
 
 ### Testing First
 
 1. Set `MAX_ROWS = 1000` (or 5000) to test on a subset
-2. Verify the output in `sentiment_output/`
+2. Verify the output in `output/sentiment_output/`
 3. Set `MAX_ROWS = None` to process all rows
 
 ---
@@ -113,14 +125,14 @@ python inference_script.py
 ## Training Your Own Model
 
 1. Prepare your labeled data as a CSV with `text` and `label` columns
-2. Update `DATA_PATH` in `sentiment_training.py`
+2. Place it in the `data/` folder and update `DATA_PATH` in `scripts/sentiment_training.py`
 3. Run training:
 
 ```bash
-python sentiment_training.py
+python scripts/sentiment_training.py
 ```
 
-The model will be saved to `setfit_sentiment_model_safetensors/`.
+The model will be saved to `models/setfit_sentiment_model_safetensors/`.
 
 ---
 

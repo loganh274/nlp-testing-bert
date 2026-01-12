@@ -5,7 +5,7 @@ import pandas as pd
 import torch
 import os
 
-MODEL_DIR = "setfit_sentiment_model_safetensors"
+MODEL_DIR = "../models/setfit_sentiment_model_safetensors"
 
 
 def load_model():
@@ -79,7 +79,7 @@ def run_inference(input_csv, output_folder="sentiment_output", max_rows=None, ba
         print(f"Processing batch {batch_num}/{total_batches}...")
         
         preds = model.predict(batch)
-        all_predictions.extend([p.item() for p in preds])
+        all_predictions.extend([p.item() if hasattr(p, 'item') else p for p in preds])
     
     df["SENTIMENT_SCORE"] = all_predictions
     
@@ -103,8 +103,8 @@ def run_inference(input_csv, output_folder="sentiment_output", max_rows=None, ba
 
 if __name__ == "__main__":
     # === CONFIGURATION ===
-    INPUT_CSV = "All XPI Comments filtered (2).csv"
-    OUTPUT_FOLDER = "sentiment_output"
+    INPUT_CSV = "../data/All XPI Comments filtered (2).csv"
+    OUTPUT_FOLDER = "../output/sentiment_output"
     MAX_ROWS = 1000  # Set to None to process all rows
     BATCH_SIZE = 100
     # =====================

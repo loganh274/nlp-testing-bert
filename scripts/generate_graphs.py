@@ -8,9 +8,9 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
 from setfit import SetFitModel
 
-DATA_PATH = "xpi_labeled_data_augmented.csv"
-MODEL_DIR = "setfit_sentiment_model_final"
-OUTPUT_DIR = "model_visualizations"
+DATA_PATH = "../data/xpi_labeled_data_augmented.csv"
+MODEL_DIR = "../models/setfit_sentiment_model_safetensors"
+OUTPUT_DIR = "../output/model_visualizations"
 
 
 def plot_confusion_matrix(y_true, y_pred, labels, output_dir):

@@ -1,7 +1,7 @@
 venv/
 checkpoints/
-setfit_sentiment_model_final/
-setfit_sentiment_model_safetensors/
+models/setfit_sentiment_model_final/
+models/setfit_sentiment_model_safetensors/
 *.safetensors
 *.pt
 *.pkl
