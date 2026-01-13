@@ -1,0 +1,77 @@
+{
+  "total_misclassified": 22,
+  "error_breakdown": [
+    {
+      "error_type": "Negative \u2192 Neutral",
+      "count": 6,
+      "percentage_of_class": 30.0
+    },
+    {
+      "error_type": "Very Negative \u2192 Negative",
+      "count": 5,
+      "percentage_of_class": 25.0
+    },
+    {
+      "error_type": "Very Negative \u2192 Neutral",
+      "count": 2,
+      "percentage_of_class": 10.0
+    },
+    {
+      "error_type": "Negative \u2192 Very Negative",
+      "count": 2,
+      "percentage_of_class": 10.0
+    },
+    {
+      "error_type": "Positive \u2192 Neutral",
+      "count": 2,
+      "percentage_of_class": 10.0
+    },
+    {
+      "error_type": "Negative \u2192 Positive",
+      "count": 1,
+      "percentage_of_class": 5.0
+    },
+    {
+      "error_type": "Neutral \u2192 Negative",
+      "count": 1,
+      "percentage_of_class": 5.0
+    },
+    {
+      "error_type": "Positive \u2192 Very Negative",
+      "count": 1,
+      "percentage_of_class": 5.0
+    },
+    {
+      "error_type": "Positive \u2192 Negative",
+      "count": 1,
+      "percentage_of_class": 5.0
+    },
+    {
+      "error_type": "Very Positive \u2192 Positive",
+      "count": 1,
+      "percentage_of_class": 5.0
+    }
+  ],
+  "recommendations": [
+    {
+      "priority": "HIGH",
+      "issue": "Negative frequently misclassified as Neutral (30%)",
+      "action": "Add more training examples that clearly distinguish Negative from Neutral"
+    },
+    {
+      "priority": "MEDIUM",
+      "issue": "Adjacent class confusion: Negative \u2194 Neutral",
+      "action": "Consider adding examples at the boundary between these classes, or merge them if distinction isn't critical"
+    },
+    {
+      "priority": "HIGH",
+      "issue": "Very Negative frequently misclassified as Negative (25%)",
+      "action": "Add more training examples that clearly distinguish Very Negative from Negative"
+    },
+    {
+      "priority": "MEDIUM",
+      "issue": "Adjacent class confusion: Very Negative \u2194 Negative",
+      "action": "Consider adding examples at the boundary between these classes, or merge them if distinction isn't critical"
+    }
+  ]
+}

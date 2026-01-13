@@ -1,0 +1,47 @@
+text,label,predicted,predicted_name,actual_name,correct,error_type
+"I can't believe Xero hasn't thought about this when creating this software. Customers would require different delivery address to manage inventory. 
+Also it updates the address to all invoiced/quotes for the particular customer. It's very hard to trust the system and have to keep separate system to ensure orders are shipped to correct address. Not sure why it is taking so long for Xero developers to add a field and make it operational. ",0,1,Negative,Very Negative,False,Very Negative → Negative
+This is incredibly important - we have many customers with multiple service locations and some of these customers won't accept Xero invoices due to the fact we can't show the service location address on the invoice unless we update it on the system every single time which is time consuming when Xero is supposed to be making our lives easier!,0,1,Negative,Very Negative,False,Very Negative → Negative
+I find it appalling that this is not an option.  I have one client with 8 different stores and I cannot save their delivery addresses under the one account.  Xero get your act together!,0,2,Neutral,Very Negative,False,Very Negative → Neutral
+"Hello XERO! Please make this possible by this quarter! This feature is very critical! There is an option to choose multiple addresses in Purchase but NOT in SALES. How come???
+
+I am looking forward to this feature very soon!!!",0,1,Negative,Very Negative,False,Very Negative → Negative
+"Can we get an estimated date when this might be available, this is very frustrating for a significant number of users and has been on the to-do list forever. 
+I have read the statement above that suggests it's being looked at, but it's still very non-specific as to when we might actually see something. ",0,1,Negative,Very Negative,False,Very Negative → Negative
+"I think xero is overthinking this.  The way it works in quickbooks and others is you can freeform paste in a shipping address during invoice creating.  Since our clients jobs (contruction) go from address to address, it is not important to keep this info in a record beyond just the invoice.
+
+Let me repeat: we have customers where the shipping invoice is NEVER the same and it changes EVERY bill.
+
+What most people are doing now in xero is adding it to the reference field or pasting in a ""freight"" item line.  So why not just have an optionally-filled ship to line that can be pasted into as customers are already doing with these workarounds??",0,1,Negative,Very Negative,False,Very Negative → Negative
+Please upgrade this asap!! If the technology needs upgrading for such a simple feature then this should be priority otherwise how else will anything be upgraded. Really considering moving to MYOB...,0,2,Neutral,Very Negative,False,Very Negative → Neutral
+The ability to set up one customer with multiple delivery addresses is a pretty basic function and one that many other on line providers offer as standard. Please release this functionality ASAP.,1,2,Neutral,Negative,False,Negative → Neutral
+Some of our customers have one central invoicing address with multiple delivery sites  definitely a problem we have faced when using Xero,1,2,Neutral,Negative,False,Negative → Neutral
+"Urgently need the ability to have multiple delivery addresses for a customer.  Have asked previously, but that thread (& the 100's of comments) seems to have disappeared!
+Xero, please spend time on this rather than other updates which we don't like.",1,0,Very Negative,Negative,False,Negative → Very Negative
+"Really  surprised this isn't supported.  As a B2B company, our customers very frequently have different desired Ship To locations...and having that not reflect accurately in the invoice is a big impediment.  The workaround of creating a distinct Contact record for each desired shipping location is also problematic, as some of these addresses will only be used infrequently.   Please please",1,2,Neutral,Negative,False,Negative → Neutral
+"@Benjamin Patton - this has actually been a feature request for around 7 to 9 years..... they closed their old forum and created this one, so all of the requests that have been around for years now look new. I've been using Xero for over 10 years (boss refuses to let me move to different accounts program because he thinks it would be too much time and energy, so I have learnt to suffer) and this was one of the first features i voted on years ago. It used to have hundreds of votes but this new forum is much more difficult to navigate than the last one so I'm guessing a lot of users can't find this to vote on it again... or they have just lost the will to try after so many years.... ",1,0,Very Negative,Negative,False,Negative → Very Negative
+"Kelly any updates ??
+MYOB has ability to do Multiple Delivery addresses 
+Quickbooks has the ability to do Multiple Delivery addresses 
+
+",1,2,Neutral,Negative,False,Negative → Neutral
+"Yes! We have this issue where we are dealing with multiple people from the same contact record, but no way of being able to add a contact record first name, last name, email, phone and position etc ""sales""
+
+At the moment, we have a group of phone numbers, but no way of inputting which phone number matches to which person within that contact record. This seems like a very basic functionality for this system!",1,2,Neutral,Negative,False,Negative → Neutral
+It's frustrating when dealing with multiple contracts and departments within the same company.  Currently each contract with the same client is set up with a new debtor record with new contact details.  It makes reporting time consuming if you have to go through and add them all together to get anything meaningful around your debtors.  Other software packages can deal with it - how do they do it?  I appreciate your time in looking into this.,1,3,Positive,Negative,False,Negative → Positive
+Many customers have multiple shipping addresses. It's very annoying that these cannot be stored so you can choose the shipping address for a particular order. I know that Sage allows for this and it seems crazy Xero as advanced as it is does not. Please sort it out Xero. All I can do currently is save the addresses previously used under notes for the customer.,1,2,Neutral,Negative,False,Negative → Neutral
+"Ability to access an address book when sending a quote. 
+
+Some clients have multiple managers and the quote doesn't always go to the same person nor to accounts. Currently we have to cut and paste the email address in from another piece of software. which is quite time consuming",2,1,Negative,Neutral,False,Neutral → Negative
+"Also NEED this feature. Please add ASAP, Xero. Thanks!",3,2,Neutral,Positive,False,Positive → Neutral
+"I switched from Sage to Xero because I find Xero more straightforward and user-friendly. However, Sage offers more features, like the ability to assign multiple shipping addresses to a single contact. This is important for me because I have clients with multiple branches, and my driver often gets confused about the correct delivery address. I currently have to handwrite the address on the delivery slip, which is time-consuming.",3,1,Negative,Positive,False,Positive → Negative
+"I transitioned from Sage to Xero a few years ago, largely because Xero was ahead of the curve in many areas. However, the lack of support for multiple addresses under a single contact record has been a significant pain point for my business. Sage handled this feature very well, and it’s disappointing that Xero doesn’t yet offer a comparable solution. 
+
+For example, we work with a client that requires individual invoices for numerous delivery sites. Currently, having to place the delivery address in the reference field is cumbersome and unprofessional. This feels like a fundamental feature that should already be in place.  
+
+I understand the complexity of implementing such a solution, but it’s vital for businesses like mine. While this enhancement might not bring immediate revenue, it will undoubtedly help retain your loyal customers and improve user satisfaction. 
+
+
+",3,0,Very Negative,Positive,False,Positive → Very Negative
+This would be very helpful because if I work with a contractor I want to keep track how much he owes me even if it distributed with multiple addresses. Here is a example of how we do this is on our scheduling system.,3,2,Neutral,Positive,False,Positive → Neutral
+Huge relief to have this sorted. Invoicing is actually fast again. 10/10 update.,4,3,Positive,Very Positive,False,Very Positive → Positive
