@@ -1,9 +1,9 @@
 """SetFit sentiment model training script."""
-
+import os
 import pandas as pd
 import numpy as np
 import torch
-import os
+
 import json
 import sys
 import sklearn
@@ -11,6 +11,7 @@ import setfit
 import matplotlib.pyplot as plt
 import seaborn as sns
 import re
+import gc
 from typing import Dict, List, Any, Optional
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, f1_score, precision_score, recall_score
@@ -18,6 +19,8 @@ from setfit import SetFitModel, Trainer, TrainingArguments
 from datasets import Dataset
 from sentence_transformers.losses import CosineSimilarityLoss
 from transformers.trainer_callback import TrainerCallback, TrainerState, TrainerControl
+
+
 
 # Configuration
 TRAIN_DATA_PATH = "data/training_augmented.csv"
@@ -29,6 +32,10 @@ BASE_MODEL_NAME = "BAAI/bge-base-en-v1.5"
 #BASE_MODEL_NAME = "sentence-transformers/all-mpnet-base-v2"
 BATCH_SIZE = 16
 NUM_EPOCHS = (1, 16)
+
+if torch.backends.mps.is_available():
+    torch.mps.empty_cache()
+gc.collect()
 
 def enhance_emotional_features(text):
     """Preserve and normalize emotional language features for better embedding."""
@@ -116,7 +123,7 @@ def get_model_stats(model: SetFitModel) -> Dict[str, Any]:
     total_trainable = body_trainable + head_trainable
     
     # Estimate model size (assuming float32 for most params)
-    model_size_mb = (body_params * 4) / (1024 * 1024)  # 4 bytes per float32
+    model_size_mb = (body_params * 4) / (1024 * 1024)  
     
     return {
         "total_parameters": total_params,
@@ -413,7 +420,6 @@ def main():
     
     trainer.train()
     
-    # Collect training history from callback
     training_history = metric_callback.get_history()
     print(f"\nTraining history captured: {list(training_history.keys())}")
 
@@ -423,11 +429,9 @@ def main():
     
     preds = model.predict(test_df[text_col].tolist())
     
-    # Create output directories
     os.makedirs(MODEL_OUTPUT_DIR, exist_ok=True)
     os.makedirs(CONFUSION_MATRIX_OUTPUT_DIR, exist_ok=True)
     
-    # Generate all visualizations
     print("\n--- Generating Visualizations ---")
     
     # 1. Training history plots (loss curves, learning rate)
